@@ -8,33 +8,25 @@ DOT_FLAGS := -Tpng
 # Command to convert .md files to .odt and .pdf
 PANDOC := pandoc
 
-# Temporary preprocessed markdown file
-TEMP_MD := temp.md
-
 # Pattern rule to convert .dot files to .png
 %.png: %.dot
 	$(DOT) $(DOT_FLAGS) $< -o $@
 
-# Preprocess .md files to strip text between markers before converting to .odt
+# Preprocess .md and pipe directly into Pandoc to create .odt
 %.odt: %.md $(wildcard *.dot)
-	# Strip out text between <!-- START --> and <!-- END --> markers
-	sed '/<!-- START -->/,/<!-- END -->/d' $< > $(TEMP_MD)
-	# Convert preprocessed file to .odt
-	$(PANDOC) $(TEMP_MD) -o $@
+	# Strip out text between <!-- START --> and <!-- END --> and pipe to Pandoc
+	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown -o $@
 
-# Preprocess .md files to strip text between markers before converting to .pdf
+# Preprocess .md and pipe directly into Pandoc to create .pdf
 %.pdf: %.md $(wildcard *.dot)
-	# Strip out text between <!-- START --> and <!-- END --> markers
-	sed '/<!-- START -->/,/<!-- END -->/d' $< > $(TEMP_MD)
-	# Convert preprocessed file to .pdf
-	$(PANDOC) $(TEMP_MD) -o $@
+	# Strip out text between <!-- START --> and <!-- END --> and pipe to Pandoc
+	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown -o $@
 
 # Target to process all .dot, .md files to .png, .odt, and .pdf
 all: $(patsubst %.dot,%.png,$(wildcard *.dot)) \
      $(patsubst %.md,%.odt,$(wildcard *.md)) \
      $(patsubst %.md,%.pdf,$(wildcard *.md))
 
-# Clean up the generated png, odt, pdf, and temporary files
+# Clean up the generated png, odt, and pdf files
 clean:
-	rm -f *.png *.odt *.pdf $(TEMP_MD)
-
+	rm -f *.png *.odt *.pdf
