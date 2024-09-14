@@ -35,6 +35,8 @@ Ensure you have the following tools installed:
 
 2. Place your `.md` and `.dot` files in the project directory.
 
+3. Run `make` in the directory. The `Makefile` contains the rules that will then convert the .md and .dot files to make complete documents.
+
 ### Markers for Stripping Text
 
 In your Markdown files, use the following markers to define sections that should be stripped out before conversion:
