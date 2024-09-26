@@ -21,8 +21,15 @@ with the purpose of making the production of documents (quotes) more efficient.
 Ensure you have the following tools installed:
 
 - [Pandoc](https://pandoc.org/installing.html)
+- Latex - for pandoc
 - [Graphviz](https://graphviz.org/download/) (`dot` command)
 - [GNU Make](https://www.gnu.org/software/make/)
+
+Ubuntu:
+
+```
+apt install pandoc texlive-latex-base texlive-latex-extra graphviz
+```
 
 ### Setup
 

@@ -7,6 +7,7 @@ DOT_FLAGS := -Tpng
 
 # Command to convert .md files to .odt and .pdf
 PANDOC := pandoc
+PANDOC_FLAGS := --toc 
 
 # Pattern rule to convert .dot files to .png
 %.png: %.dot
@@ -15,12 +16,12 @@ PANDOC := pandoc
 # Preprocess .md and pipe directly into Pandoc to create .odt
 %.odt: %.md $(wildcard *.dot)
 	# Strip out text between <!-- START --> and <!-- END --> and pipe to Pandoc
-	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown -o $@
+	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown $(PANDOC_FLAGS) -o $@
 
 # Preprocess .md and pipe directly into Pandoc to create .pdf
 %.pdf: %.md $(wildcard *.dot)
 	# Strip out text between <!-- START --> and <!-- END --> and pipe to Pandoc
-	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown -o $@
+	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown $(PANDOC_FLAGS) -o $@
 
 # Target to process all .dot, .md files to .png, .odt, and .pdf
 all: $(patsubst %.dot,%.png,$(wildcard *.dot)) \
