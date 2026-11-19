@@ -28,7 +28,7 @@ Ensure you have the following tools installed:
 Ubuntu:
 
 ```
-apt install pandoc texlive-latex-base texlive-latex-extra graphviz
+apt install pandoc texlive-latex-base texlive-latex-extra texlive-luatex graphviz
 ```
 
 ### Setup
@@ -83,6 +83,7 @@ makefile-docs-builder/
 ├── file2.md
 ├── diagram.dot
 ├── Makefile
+├── tables.lua
 └── README.md
 ```
 
@@ -101,6 +102,28 @@ makefile-docs-builder/
 ├── Makefile
 └── README.md
 ```
+
+### Document defaults
+
+New documents made with `new-doc.sh` start from `template.md` and get these defaults:
+
+- **Numbered headings** (`numbersections: true`), so sections can be referred to on the phone. To cross-reference
+  a heading, write `see Heading Name (section \ref{heading-name})` — the label is the heading in lower case with
+  spaces as hyphens, and the number updates itself if sections move.
+- **Ruled tables.** `tables.lua` adds a thin light-grey rule between table rows in the PDF, so it is clear where one
+  row ends when cells wrap onto several lines. The rule is defined as `\rowsep` in the template header, and the row
+  height by `\arraystretch`. (Alternating row shading was tried and looked worse: it overhangs the table edges and
+  leaves gaps at the header rule.)
+- **LuaLaTeX** as the PDF engine, so `—`, `£` and `™` work without extra setup.
+- An optional **boxed notice page** (e.g. "This is an estimate, not a quotation"), commented out in the template
+  header — uncomment `include-before` to use it.
+
+Tips:
+
+- **Diagrams:** use `rankdir=TB` (top to bottom) and font sizes of about 13–15 in `.dot` files. Wide left-to-right
+  diagrams get shrunk to page width and the text becomes unreadable. Avoid `rank=same` across clusters — it drags
+  nodes out of their boxes and widens the diagram.
+- Text between `<!-- START -->` and `<!-- END -->` is for draft notes; it never reaches the PDF.
 
 ### Customization
 

@@ -24,9 +24,10 @@ TEMPLATE="$CODE_DIR/template.md"
 mkdir -p "$DIR"
 echo "Created directory: $DIR"
 
-# Copy Makefile
+# Copy Makefile and the table filter it uses
 cp "$CODE_DIR/Makefile" "$DIR/"
-echo "Copied Makefile to $DIR/"
+cp "$CODE_DIR/tables.lua" "$DIR/"
+echo "Copied Makefile and tables.lua to $DIR/"
 
 # Create images directory
 mkdir -p "$DIR/images"

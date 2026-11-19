@@ -7,7 +7,11 @@ DOT_FLAGS := -Tpng
 
 # Command to convert .md files to .odt and .pdf
 PANDOC := pandoc
-PANDOC_FLAGS := --toc 
+# lualatex handles Unicode (em dashes, ™, £) without fuss.
+# tables.lua draws a thin light rule between table rows in the PDF; because it
+# emits raw LaTeX, "-V tables=true" makes pandoc still load the table packages.
+PANDOC_FLAGS := --toc
+PDF_FLAGS := --pdf-engine=lualatex --lua-filter=tables.lua -V tables=true
 
 # Pattern rule to convert .dot files to .png
 %.png: %.dot
@@ -19,9 +23,9 @@ PANDOC_FLAGS := --toc
 	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown $(PANDOC_FLAGS) -o $@
 
 # Preprocess .md and pipe directly into Pandoc to create .pdf
-%.pdf: %.md $(wildcard *.dot)
+%.pdf: %.md tables.lua $(wildcard *.dot)
 	# Strip out text between <!-- START --> and <!-- END --> and pipe to Pandoc
-	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown $(PANDOC_FLAGS) -o $@
+	sed '/<!-- START -->/,/<!-- END -->/d' $< | $(PANDOC) -f markdown $(PANDOC_FLAGS) $(PDF_FLAGS) -o $@
 
 # Target to process all .dot, .md files to .png, .odt, and .pdf
 all: $(patsubst %.dot,%.png,$(wildcard *.dot)) \
